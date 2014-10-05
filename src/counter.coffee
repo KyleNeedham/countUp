@@ -58,7 +58,6 @@
      * by Opera engineer Erik Möller
      * 
      * @method polyFill
-     * @return
      *  
     ###
     polyFill: ->
@@ -93,7 +92,7 @@
      * 
      * @method printValue
      * @param {number} value
-     * @return
+     * @return {string} The figure that was printed
      *  
     ###
     printValue: (value) ->
@@ -103,6 +102,8 @@
         @element.value = result
       else
         @element.innerHTML = result
+
+      result
 
     ###*
      * 
@@ -121,7 +122,7 @@
      * 
      * @method count
      * @param {number} timestamp
-     * @return {number}
+     * @return
      *  
     ###
     count: (timestamp) =>
@@ -165,7 +166,7 @@
      * 
      * @method start
      * @param {function} callback
-     * @return {boolean}
+     * @return {object}
      *  
     ###
     start: (callback) ->
@@ -178,21 +179,23 @@
         console.error 'countUp error: startVal or endVal is not a number'
         @printValue()
 
-      false
+      @
 
     ###*
      * 
      * @method stop
-     * @return
+     * @return {object}
      *  
     ###
     stop: ->
       cancelAnimationFrame @rAF
 
+      @
+
     ###*
      * 
      * @method reset
-     * @return
+     * @return {object}
      *  
     ###
     reset: ->
@@ -202,10 +205,12 @@
       cancelAnimationFrame @rAF
       @printValue @startVal
 
+      @
+
     ###*
      * 
      * @method resume
-     * @return
+     * @return {object}
      *  
     ###
     resume: ->
@@ -216,6 +221,8 @@
       @startVal  = @frameVal
 
       requestAnimationFrame @count
+
+      @
 
     ###*
      * 
