@@ -1,0 +1,28 @@
+{
+  "name": "counter",
+  "version": "0.0.1",
+  "homepage": "https://github.com/KyleNeedham/Counter",
+  "authors": [
+    "Kyle Needham <kylex691@hotmail.com>"
+  ],
+  "description": "Light weight, dependcy free, number counting animation written in coffeeScript",
+  "main": "build/counter.js",
+  "moduleType": [
+    "amd",
+    "globals"
+  ],
+  "keywords": [
+    "counter",
+    "number",
+    "animation"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "spec"
+  ]
+}
