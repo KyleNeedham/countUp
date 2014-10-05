@@ -19,7 +19,6 @@
       /**
        * Counter
        * 
-       * @class
        * @param {number} target element selector or var of previously selected html element where counting occurs
        * @param {number} startVal The value you want to begin at
        * @param {number} endVal The value you want to arrive at
@@ -72,7 +71,6 @@
        * by Opera engineer Erik Möller
        * 
        * @method polyFill
-       * @return
        *
        */
 
@@ -111,7 +109,7 @@
        * 
        * @method printValue
        * @param {number} value
-       * @return
+       * @return {string} The figure that was printed
        *
        */
 
@@ -119,10 +117,11 @@
         var result;
         result = !isNaN(value) ? this.formatNumber(value) : '--';
         if (this.element.tagName === 'INPUT') {
-          return this.element.value = result;
+          this.element.value = result;
         } else {
-          return this.element.innerHTML = result;
+          this.element.innerHTML = result;
         }
+        return result;
       };
 
 
@@ -146,7 +145,7 @@
        * 
        * @method count
        * @param {number} timestamp
-       * @return {number}
+       * @return
        *
        */
 
@@ -192,7 +191,7 @@
        * 
        * @method start
        * @param {function} callback
-       * @return {boolean}
+       * @return {object}
        *
        */
 
@@ -204,26 +203,27 @@
           console.error('countUp error: startVal or endVal is not a number');
           this.printValue();
         }
-        return false;
+        return this;
       };
 
 
       /**
        * 
        * @method stop
-       * @return
+       * @return {object}
        *
        */
 
       Counter.prototype.stop = function() {
-        return cancelAnimationFrame(this.rAF);
+        cancelAnimationFrame(this.rAF);
+        return this;
       };
 
 
       /**
        * 
        * @method reset
-       * @return
+       * @return {object}
        *
        */
 
@@ -231,14 +231,15 @@
         this.startTime = null;
         this.startVal = this.root.startVal;
         cancelAnimationFrame(this.rAF);
-        return this.printValue(this.startVal);
+        this.printValue(this.startVal);
+        return this;
       };
 
 
       /**
        * 
        * @method resume
-       * @return
+       * @return {object}
        *
        */
 
@@ -247,7 +248,8 @@
         this.startTime = null;
         this.duration = this.remaining;
         this.startVal = this.frameVal;
-        return requestAnimationFrame(this.count);
+        requestAnimationFrame(this.count);
+        return this;
       };
 
 
