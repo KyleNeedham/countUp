@@ -1,5 +1,5 @@
 #!/bin/sh
 #
 # Use this to compile CoffeeScript into JS
-coffee --compile --output build/ src/count_up.coffee
+coffee --compile --output build/ src/counter.coffee
 echo CoffeeScript compiled successfully
