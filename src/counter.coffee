@@ -8,7 +8,15 @@
 
   class Counter
 
-    @VERSION: '0.0.1'
+    @VERSION: '0.0.2'
+
+    @DEFAULTS:
+      useEasing: yes
+      useGrouping: yes
+      separator: ','
+      decimal: '.'
+      prefix: ''
+      suffix: ''
 
     ###*
      * Counter
@@ -22,21 +30,10 @@
      * @param {object} [options] Optional object of options (see below)
      * 
     ###
-    constructor: (target, startVal, endVal, decimals, duration, options) ->
+    constructor: (target, startVal, endVal, decimals, duration, options = {}) ->
       @polyFill()
 
-      @root = {target, startVal, endVal, decimals, duration}
-
-      @options = options extends
-        useEasing: yes
-        useGrouping: yes
-        separator: ','
-        decimal: '.'
-        prefix: ''
-        suffix: ''
-
-      @options.useGrouping = no if @options.separator is ''
-
+      @root      = {target, startVal, endVal, decimals, duration}
       @element   = if typeof target is 'string' then document.querySelector target else target
       @startVal  = +startVal
       @endVal    = +endVal
@@ -49,6 +46,8 @@
       @decimals  = Math.max 0, decimals or 0
       @dec       = 10 ** @decimals
       @duration  = duration * 1000 or 2000
+      @options   = @extend options, @getAttributes(@element), Counter.DEFAULTS
+      @options.useGrouping = no if @options.separator is ''
 
       @printValue @startVal
 
@@ -86,6 +85,42 @@
       unless root.cancelAnimationFrame
         root.cancelAnimationFrame = (id) ->
           clearTimeout id
+
+    ###*
+     * 
+     * @method extend
+     * @param {object} obj
+     *  
+    ###
+    extend: (obj) ->
+      i = 1
+
+      while i < arguments.length
+        source = arguments[i]
+
+        for prop of source
+          obj[prop] = source[prop] unless obj[prop]?
+
+        i++
+
+      obj
+
+    ###*
+     * Get options from `data-*` attributes
+     * 
+     * @method getAttributes
+     * @param (object) element
+     *  
+    ###
+    getAttributes: (element) ->
+      return element.dataset if element.dataset
+
+      useEasing: element.getAttribute 'data-easing'
+      useGrouping: element.getAttribute 'data-grouping'
+      separator: element.getAttribute 'data-separator'
+      decimal: element.getAttribute 'data-decimal'
+      prefix: element.getAttribute 'data-prefix'
+      suffix: element.getAttribute 'data-suffix'
 
     ###*
      * Print value to the target element
