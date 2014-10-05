@@ -1,6 +1,6 @@
 {
   "name": "counter",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Light weight, dependcy free, number counting animation written in coffeeScript",
   "main": "build/counter.js",
   "scripts": {
