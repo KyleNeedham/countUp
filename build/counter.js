@@ -11,15 +11,18 @@
   })(this, function(root) {
     var Counter;
     return Counter = (function() {
-      Counter.VERSION = '0.0.2';
+      Counter.VERSION = '1.0.0';
 
       Counter.DEFAULTS = {
-        useEasing: true,
-        useGrouping: true,
+        autostart: false,
+        easing: true,
+        grouping: true,
         separator: ',',
         decimal: '.',
         prefix: '',
-        suffix: ''
+        suffix: '',
+        decimals: 0,
+        duration: 2
       };
 
 
@@ -30,42 +33,37 @@
        * @param {number} target element selector or var of previously selected html element where counting occurs
        * @param {number} startVal The value you want to begin at
        * @param {number} endVal The value you want to arrive at
-       * @param {number} [decimals=0] Tumber of decimal places
-       * @param {number} [duration=2] Duration of animation in second
        * @param {object} [options] Optional object of options (see below)
        *
        */
 
-      function Counter(target, startVal, endVal, decimals, duration, options) {
+      function Counter(target, startVal, endVal, options) {
         if (options == null) {
           options = {};
         }
         this.count = __bind(this.count, this);
         this.polyFill();
-        this.root = {
-          target: target,
-          startVal: startVal,
-          endVal: endVal,
-          decimals: decimals,
-          duration: duration
-        };
         this.element = typeof target === 'string' ? document.querySelector(target) : target;
-        this.startVal = +startVal;
-        this.endVal = +endVal;
-        this.countDown = startVal > endVal ? true : false;
+        this.options = this.extend(options, this.getAttributes(), Counter.DEFAULTS);
+        this.startVal = this._startVal = +startVal;
+        this.endVal = this._endVal = +endVal;
+        this.countDown = this.startVal > this.endVal ? true : false;
         this.startTime = null;
         this.timestamp = null;
         this.remaining = null;
         this.rAF = null;
         this.frameVal = this.startVal;
-        this.decimals = Math.max(0, decimals || 0);
+        this.decimals = Math.max(0, this.options.decimals);
         this.dec = Math.pow(10, this.decimals);
-        this.duration = duration * 1000 || 2000;
-        this.options = this.extend(options, this.getAttributes(this.element), Counter.DEFAULTS);
+        this.duration = this.options.duration * 1000;
         if (this.options.separator === '') {
-          this.options.useGrouping = false;
+          this.options.grouping = false;
         }
-        this.printValue(this.startVal);
+        if (this.options.autostart) {
+          this.start();
+        } else {
+          this.printValue(this.startVal);
+        }
       }
 
 
@@ -132,24 +130,47 @@
 
 
       /**
+       * Get element data attribute
+       * 
+       * @method getDataAttribute
+       * @param {object} element
+       * @param {string} attribute
+       *
+       */
+
+      Counter.prototype.getDataAttribute = function(element, attribute) {
+        if (element == null) {
+          element = this.element;
+        }
+        return element.getAttribute("data-" + attribute);
+      };
+
+
+      /**
        * Get options from `data-*` attributes
        * 
        * @method getAttributes
-       * @param (object) element
+       * @param {object} element
        *
        */
 
       Counter.prototype.getAttributes = function(element) {
+        if (element == null) {
+          element = this.element;
+        }
         if (element.dataset) {
           return element.dataset;
         }
         return {
-          useEasing: element.getAttribute('data-easing'),
-          useGrouping: element.getAttribute('data-grouping'),
-          separator: element.getAttribute('data-separator'),
-          decimal: element.getAttribute('data-decimal'),
-          prefix: element.getAttribute('data-prefix'),
-          suffix: element.getAttribute('data-suffix')
+          autostart: this.getDataAttribute('autostart'),
+          easing: this.getDataAttribute('easing'),
+          grouping: this.getDataAttribute('grouping'),
+          separator: this.getDataAttribute('separator'),
+          decimal: this.getDataAttribute('decimal'),
+          decimals: this.getDataAttribute('decimals'),
+          duration: this.getDataAttribute('duration'),
+          prefix: this.getDataAttribute('prefix'),
+          suffix: this.getDataAttribute('suffix')
         };
       };
 
@@ -207,7 +228,7 @@
         this.timestamp = timestamp;
         progress = timestamp - this.startTime;
         this.remaining = this.duration - progress;
-        if (this.options.useEasing) {
+        if (this.options.easing) {
           if (this.countDown) {
             this.frameVal = this.startVal - this.easeOutExpo(progress, 0, this.startVal - this.endVal, this.duration);
           } else {
@@ -250,7 +271,7 @@
         if (!isNaN(this.endVal) && !isNaN(this.startVal)) {
           this.rAF = requestAnimationFrame(this.count);
         } else {
-          console.error('countUp error: startVal or endVal is not a number');
+          console.error('Counter error: startVal or endVal is not a number');
           this.printValue();
         }
         return this;
@@ -279,7 +300,7 @@
 
       Counter.prototype.reset = function() {
         this.startTime = null;
-        this.startVal = this.root.startVal;
+        this.startVal = this._startVal;
         cancelAnimationFrame(this.rAF);
         this.printValue(this.startVal);
         return this;
@@ -317,7 +338,7 @@
         x1 = x[0];
         x2 = x.length > 1 ? this.options.decimal + x[1] : '';
         rgx = /(\d+)(\d{3})/;
-        if (this.options.useGrouping) {
+        if (this.options.grouping) {
           while (rgx.test(x1)) {
             x1 = x1.replace(rgx, "$1" + this.options.separator + "$2");
           }
