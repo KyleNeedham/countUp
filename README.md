@@ -1,50 +1,64 @@
 Counter
 ======
 
-Counter is a Lightweight dependency free module based on **[inorganik/countUp.js](https://github.com/inorganik/countUp.js)**, written in coffeescript and made AMD compatitable.
+Counter is a Lightweight dependency free module based on **[inorganik/countUp.js](https://github.com/inorganik/countUp.js)**, written in coffeescript and made AMD compatible.
 
 ---
 
-Counter parametres `target, startVal, endVal, decimals, duration, options` 
+Counter parameters `target, startVal, endVal, options` 
 
-**Avaliable options:**
+**Available options:**
 ```
-useEasing: true
-useGrouping: true
+autostart: false
+easing: true
+grouping: true
 separator: ','
 decimal: '.'
 prefix: ''
 suffix: ''
+decimals: 0
+duration: 2
 ```
 
 Basic Use
 =========
 
 ### Passing values to the constructor:
+
+By default counting will not start until `.start()` is called
 ```
-counter = new Counter('#counter', 5000, 50000, 0, 2);
+counter = new Counter('#counter', 5000, 50000);
 counter.start();
+```
+however you can pass `autostart: true` in the options object to start on initialization
+```
+counter = new Counter('#counter', 5000, 5000, {
+  autostart: true
+});
 ```
 
 ### Using data-* attributes:
 
-**Avaliable attributes:**
+All available options can be passed using data attributes
 ```
-data-easing
-data-grouping
-data-separator
-data-decimal
-data-prefix
-data-suffix
-```
-
-Add any options you would like as data attributes
-```
-<span data-prefix="$" data-separator=":"></span>
+<span
+  id="counter"
+  data-autostart="true"
+  data-easing="true"
+  data-grouping="true"
+  data-separator=","
+  data-decimal="."
+  data-prefix=""
+  data-suffix=""
+  data-decimals="0"
+  data-duration="2"
+>
+</span>
 ```
 
 Then construct the same way you would normally
 ```
 counter = new Counter('#counter', 5000, 50000);
-counter.start();
 ```
+
+**Be aware** that passing any values to `data-autostart | data-easing | data-grouping` will evaluate to `true` since they are parsed as strings.
