@@ -11,12 +11,15 @@
     @VERSION: '1.0.0'
 
     @DEFAULTS:
-      useEasing: yes
-      useGrouping: yes
+      autostart: no
+      easing: yes
+      grouping: yes
       separator: ','
       decimal: '.'
       prefix: ''
       suffix: ''
+      decimals: 0
+      duration: 2
 
     ###*
      * Counter
@@ -25,31 +28,31 @@
      * @param {number} target element selector or var of previously selected html element where counting occurs
      * @param {number} startVal The value you want to begin at
      * @param {number} endVal The value you want to arrive at
-     * @param {number} [decimals=0] Tumber of decimal places
-     * @param {number} [duration=2] Duration of animation in second
      * @param {object} [options] Optional object of options (see below)
      * 
     ###
-    constructor: (target, startVal, endVal, decimals, duration, options = {}) ->
+    constructor: (target, startVal, endVal, options = {}) ->
       @polyFill()
 
-      @root      = {target, startVal, endVal, decimals, duration}
       @element   = if typeof target is 'string' then document.querySelector target else target
-      @startVal  = +startVal
-      @endVal    = +endVal
-      @countDown = if startVal > endVal then yes else no
+      @options   = @extend options, @getAttributes(), Counter.DEFAULTS
+      @startVal  = @_startVal = +startVal
+      @endVal    = @_endVal = +endVal
+      @countDown = if @startVal > @endVal then yes else no
       @startTime = null
       @timestamp = null
       @remaining = null
       @rAF       = null
       @frameVal  = @startVal
-      @decimals  = Math.max 0, decimals or 0
+      @decimals  = Math.max 0, @options.decimals
       @dec       = 10 ** @decimals
-      @duration  = duration * 1000 or 2000
-      @options   = @extend options, @getAttributes(@element), Counter.DEFAULTS
-      @options.useGrouping = no if @options.separator is ''
+      @duration  = @options.duration * 1000
+      @options.grouping = no if @options.separator is ''
 
-      @printValue @startVal
+      if @options.autostart
+        @start()
+      else
+        @printValue @startVal
 
     ###*
      * Make sure requestAnimationFrame and cancelAnimationFrame are defined
@@ -106,21 +109,35 @@
       obj
 
     ###*
+     * Get element data attribute
+     * 
+     * @method getDataAttribute
+     * @param {object} element
+     * @param {string} attribute
+     *  
+    ###
+    getDataAttribute: (element = @element, attribute) ->
+      element.getAttribute "data-#{attribute}"
+
+    ###*
      * Get options from `data-*` attributes
      * 
      * @method getAttributes
-     * @param (object) element
+     * @param {object} element
      *  
     ###
-    getAttributes: (element) ->
+    getAttributes: (element = @element) ->
       return element.dataset if element.dataset
 
-      useEasing: element.getAttribute 'data-easing'
-      useGrouping: element.getAttribute 'data-grouping'
-      separator: element.getAttribute 'data-separator'
-      decimal: element.getAttribute 'data-decimal'
-      prefix: element.getAttribute 'data-prefix'
-      suffix: element.getAttribute 'data-suffix'
+      autostart: @getDataAttribute 'autostart'
+      easing:    @getDataAttribute 'easing'
+      grouping:  @getDataAttribute 'grouping'
+      separator: @getDataAttribute 'separator'
+      decimal:   @getDataAttribute 'decimal'
+      decimals:  @getDataAttribute 'decimals'
+      duration:  @getDataAttribute 'duration'
+      prefix:    @getDataAttribute 'prefix'
+      suffix:    @getDataAttribute 'suffix'
 
     ###*
      * Print value to the target element
@@ -167,13 +184,13 @@
       @remaining = @duration - progress
 
       # To ease or not to ease
-      if @options.useEasing
+      if @options.easing
         if @countDown
           @frameVal = @startVal - @easeOutExpo progress, 0, (@startVal - @endVal), @duration
         else #@countDown
           @frameVal = @easeOutExpo progress, @startVal, @endVal - @startVal, @duration
 
-      else #@options.useEasing
+      else #@options.easing
         if @countDown
           @frameVal = @startVal - (@startVal - @endVal) * (progress / @duration)
         else #@countDown
@@ -211,7 +228,7 @@
       if not isNaN(@endVal) and not isNaN @startVal
         @rAF = requestAnimationFrame @count
       else #isNaN @endVal and isNaN @startVal
-        console.error 'countUp error: startVal or endVal is not a number'
+        console.error 'Counter error: startVal or endVal is not a number'
         @printValue()
 
       @
@@ -235,7 +252,7 @@
     ###
     reset: ->
       @startTime = null
-      @startVal  = @root.startVal
+      @startVal  = @_startVal
 
       cancelAnimationFrame @rAF
       @printValue @startVal
@@ -273,7 +290,7 @@
       x2  = if x.length > 1 then @options.decimal + x[1] else ''
       rgx = /(\d+)(\d{3})/
 
-      if @options.useGrouping
+      if @options.grouping
         while rgx.test x1
           x1 = x1.replace rgx, "$1#{@options.separator}$2"
 
