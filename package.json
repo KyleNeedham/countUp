@@ -1,5 +1,5 @@
 {
-  "name": "counter",
+  "name": "countUp",
   "version": "1.0.0",
   "description": "Light weight, dependcy free, number counting animation written in coffeeScript",
   "main": "build/counter.js",
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/KyleNeedham/Counter.git"
+    "url": "git://github.com/KyleNeedham/countUp.git"
   },
   "keywords": [
     "counter",
@@ -18,7 +18,7 @@
   "author": "Kyle Needham <kylex691@hotmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/KyleNeedham/Counter/issues"
+    "url": "https://github.com/KyleNeedham/countUp/issues"
   },
-  "homepage": "https://github.com/KyleNeedham/Counter"
+  "homepage": "https://github.com/KyleNeedham/countUp"
 }
