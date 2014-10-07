@@ -2,5 +2,5 @@
 #
 # Use this to compile CoffeeScript into JS
 coffee --map --compile --output build/ src/counter.coffee
-coffee --bare --compile --output build/spec src/spec
+coffee --bare --compile --output build/spec spec
 echo CoffeeScript compiled successfully
