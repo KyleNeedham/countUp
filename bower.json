@@ -24,5 +24,8 @@
     "test",
     "tests",
     "spec"
-  ]
+  ],
+  "devDependencies": {
+    "jasmine": "2.0.2"
+  }
 }
