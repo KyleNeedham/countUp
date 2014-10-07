@@ -47,6 +47,7 @@
       @decimals  = Math.max 0, @options.decimals
       @dec       = 10 ** @decimals
       @duration  = @options.duration * 1000
+      @isRunning = no
       @options.grouping = no if @options.separator is ''
 
       if @options.autostart
@@ -212,6 +213,7 @@
       if progress < @duration
         @rAF = requestAnimationFrame @count
       else #progress < @duration
+        @isRunning = no
         @callback() if @callback?
 
     ###*
@@ -226,6 +228,7 @@
 
       # Make sure values are valid
       if not isNaN(@endVal) and not isNaN @startVal
+        @isRunning = yes
         @rAF = requestAnimationFrame @count
       else #isNaN @endVal and isNaN @startVal
         console.error 'Counter error: startVal or endVal is not a number'
@@ -241,6 +244,7 @@
     ###
     stop: ->
       cancelAnimationFrame @rAF
+      @isRunning = no
 
       @
 
@@ -253,6 +257,7 @@
     reset: ->
       @startTime = null
       @startVal  = @_startVal
+      @isRunning = no
 
       cancelAnimationFrame @rAF
       @printValue @startVal
@@ -271,6 +276,7 @@
       @startTime = null
       @duration  = @remaining
       @startVal  = @frameVal
+      @isRunning = yes
 
       requestAnimationFrame @count
 
