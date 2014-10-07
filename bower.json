@@ -1,11 +1,11 @@
 {
-  "name": "counter",
+  "name": "countUp",
   "version": "1.0.0",
-  "homepage": "https://github.com/KyleNeedham/Counter",
+  "homepage": "https://github.com/KyleNeedham/countUp",
   "authors": [
     "Kyle Needham <kylex691@hotmail.com>"
   ],
-  "description": "Light weight, dependcy free, number counting animation written in coffeeScript",
+  "description": "Light weight, dependcy free, number counting animation written in coffeeScript, based on countUp",
   "main": "build/counter.js",
   "moduleType": [
     "amd",
