@@ -20,5 +20,14 @@
   "bugs": {
     "url": "https://github.com/KyleNeedham/countUp/issues"
   },
-  "homepage": "https://github.com/KyleNeedham/countUp"
+  "homepage": "https://github.com/KyleNeedham/countUp",
+  "devDependencies" : {
+    "grunt"                : "latest",
+    "grunt-cli"            : "latest",
+    "grunt-contrib-watch"  : "latest",
+    "grunt-contrib-coffee" : "latest",
+    "grunt-contrib-jasmine": "latest",
+    "grunt-contrib-uglify" : "latest",
+    "grunt-growl"          : "latest"
+  }
 }
