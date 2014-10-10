@@ -102,7 +102,7 @@
       while i < arguments.length
         source = arguments[i]
 
-        obj[prop] ?= source[prop], prop of source
+        obj[key] ?= value for key, value of source
 
         i++
 
