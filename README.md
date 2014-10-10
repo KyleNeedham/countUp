@@ -1,4 +1,4 @@
-Counter
+Counter [![Build Status](https://travis-ci.org/KyleNeedham/countUp.svg?branch=master)](https://travis-ci.org/KyleNeedham/countUp)
 ======
 
 Counter is a Lightweight dependency free module based on **[inorganik/countUp.js](https://github.com/inorganik/countUp.js)**, written in coffeescript and made AMD compatible.
