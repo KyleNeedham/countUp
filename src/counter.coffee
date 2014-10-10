@@ -102,8 +102,7 @@
       while i < arguments.length
         source = arguments[i]
 
-        for prop of source
-          obj[prop] = source[prop] unless obj[prop]?
+        obj[prop] ?= source[prop], prop of source
 
         i++
 
