@@ -1,26 +1,28 @@
 
 describe 'Counter', ->
-  element = counter = null
-  
+  element = counter = options = null
+
   beforeEach ->
+    options = duration: 5, prefix: '£', suffix: ' Only', decimals: 2
     element = document.createElement 'div'
+    counter = new Counter element, 0, 5000, options
 
-    element.setAttribute 'data-duration', 10
-    element.setAttribute 'data-separator', ':'
+  describe 'parsing and extending options', ->
+    it 'should extend an object overriding only null properties', ->
+      options = counter.extend {}, {duration: 10}, {duration: 5}
+      expect(options).toEqual duration: 10
 
-    counter = new Counter element, 0, 5000, duration: 5, prefix: '£', suffix: ' Only', decimals: 2
+    it 'should parse data attribute true alias values as boolean true', ->
+      expect(counter.parseDataAttribute('on')).toEqual true
+      expect(counter.parseDataAttribute('yes')).toEqual true
+      expect(counter.parseDataAttribute('true')).toEqual true
+      expect(counter.parseDataAttribute('1')).toEqual true
 
-  it 'should setup options using constructor, data attributes and default values', ->
-    expect(counter.options).toEqual
-      autostart: false
-      decimal: "."
-      decimals: 2
-      duration: 5
-      easing: true
-      grouping: true
-      prefix: "£"
-      separator: ":"
-      suffix: " Only"
+    it 'should parse data attribute false alias values as boolean false', ->
+      expect(counter.parseDataAttribute('off')).toEqual false
+      expect(counter.parseDataAttribute('no')).toEqual false
+      expect(counter.parseDataAttribute('false')).toEqual false
+      expect(counter.parseDataAttribute('0')).toEqual false
 
   describe 'when the counter is started', ->
     beforeEach ->
@@ -42,10 +44,10 @@ describe 'Counter', ->
 
   describe 'formatting numbers', ->
     it 'should format postive numbers', ->
-      expect(counter.formatNumber 1000000).toEqual '£1:000:000.00 Only'
+      expect(counter.formatNumber 1000000).toEqual '£1,000,000.00 Only'
 
     it 'should format negative numbers', ->
-      expect(counter.formatNumber -1000000).toEqual '£-1:000:000.00 Only'
+      expect(counter.formatNumber -1000000).toEqual '£-1,000,000.00 Only'
 
     it 'should format numbers with decimals', ->
-      expect(counter.formatNumber 1000000.000).toEqual '£1:000:000.00 Only'
+      expect(counter.formatNumber 1000000.000).toEqual '£1,000,000.00 Only'

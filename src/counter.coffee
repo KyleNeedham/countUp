@@ -109,26 +109,38 @@
       obj
 
     ###*
+     * Parse data attribute
+     * 
+     * @method parseDataAttribute
+     * @param {string} attribute
+     * 
+    ###
+    parseDataAttribute: (attribute) ->
+      attribute = true if attribute in ['on', 'yes', 'true', '1']
+      attribute = false if attribute in ['off', 'no', 'false', '0']
+
+      attribute
+
+    ###*
      * Get element data attribute
      * 
      * @method getDataAttribute
-     * @param {object} element
      * @param {string} attribute
+     * @param {object} element
+     * @return {(string|number)}
      *  
     ###
-    getDataAttribute: (element = @element, attribute) ->
-      element.getAttribute "data-#{attribute}"
+    getDataAttribute: (attribute, element = @element) ->
+      @parseDataAttribute element.getAttribute "data-#{attribute}"
 
     ###*
      * Get options from `data-*` attributes
      * 
      * @method getAttributes
-     * @param {object} element
+     * @return {object}
      *  
     ###
-    getAttributes: (element = @element) ->
-      return element.dataset if element.dataset
-
+    getAttributes: () ->
       autostart: @getDataAttribute 'autostart'
       easing:    @getDataAttribute 'easing'
       grouping:  @getDataAttribute 'grouping'
