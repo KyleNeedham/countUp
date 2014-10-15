@@ -10,7 +10,7 @@
   })(this, function(root) {
     var Counter;
     return Counter = (function() {
-      Counter.VERSION = '0.1.0';
+      Counter.VERSION = '0.1.1';
 
       Counter.DEFAULTS = {
         autostart: false,
