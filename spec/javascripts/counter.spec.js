@@ -1,29 +1,39 @@
 (function() {
   describe('Counter', function() {
-    var counter, element;
-    element = counter = null;
+    var counter, element, options;
+    element = counter = options = null;
     beforeEach(function() {
-      element = document.createElement('div');
-      element.setAttribute('data-duration', 10);
-      element.setAttribute('data-separator', ':');
-      return counter = new Counter(element, 0, 5000, {
+      options = {
         duration: 5,
         prefix: '£',
         suffix: ' Only',
         decimals: 2
-      });
+      };
+      element = document.createElement('div');
+      return counter = new Counter(element, 0, 5000, options);
     });
-    it('should setup options using constructor, data attributes and default values', function() {
-      return expect(counter.options).toEqual({
-        autostart: false,
-        decimal: ".",
-        decimals: 2,
-        duration: 5,
-        easing: true,
-        grouping: true,
-        prefix: "£",
-        separator: ":",
-        suffix: " Only"
+    describe('parsing and extending options', function() {
+      it('should extend an object overriding only null properties', function() {
+        options = counter.extend({}, {
+          duration: 10
+        }, {
+          duration: 5
+        });
+        return expect(options).toEqual({
+          duration: 10
+        });
+      });
+      it('should parse data attribute true alias values as boolean true', function() {
+        expect(counter.parseDataAttribute('on')).toEqual(true);
+        expect(counter.parseDataAttribute('yes')).toEqual(true);
+        expect(counter.parseDataAttribute('true')).toEqual(true);
+        return expect(counter.parseDataAttribute('1')).toEqual(true);
+      });
+      return it('should parse data attribute false alias values as boolean false', function() {
+        expect(counter.parseDataAttribute('off')).toEqual(false);
+        expect(counter.parseDataAttribute('no')).toEqual(false);
+        expect(counter.parseDataAttribute('false')).toEqual(false);
+        return expect(counter.parseDataAttribute('0')).toEqual(false);
       });
     });
     describe('when the counter is started', function() {
@@ -48,13 +58,13 @@
     });
     return describe('formatting numbers', function() {
       it('should format postive numbers', function() {
-        return expect(counter.formatNumber(1000000)).toEqual('£1:000:000.00 Only');
+        return expect(counter.formatNumber(1000000)).toEqual('£1,000,000.00 Only');
       });
       it('should format negative numbers', function() {
-        return expect(counter.formatNumber(-1000000)).toEqual('£-1:000:000.00 Only');
+        return expect(counter.formatNumber(-1000000)).toEqual('£-1,000,000.00 Only');
       });
       return it('should format numbers with decimals', function() {
-        return expect(counter.formatNumber(1000000.000)).toEqual('£1:000:000.00 Only');
+        return expect(counter.formatNumber(1000000.000)).toEqual('£1,000,000.00 Only');
       });
     });
   });

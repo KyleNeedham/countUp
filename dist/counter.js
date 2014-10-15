@@ -131,19 +131,39 @@
 
 
       /**
-       * Get element data attribute
+       * Parse data attribute
        * 
-       * @method getDataAttribute
-       * @param {object} element
+       * @method parseDataAttribute
        * @param {string} attribute
        *
        */
 
-      Counter.prototype.getDataAttribute = function(element, attribute) {
+      Counter.prototype.parseDataAttribute = function(attribute) {
+        if (attribute === 'on' || attribute === 'yes' || attribute === 'true' || attribute === '1') {
+          attribute = true;
+        }
+        if (attribute === 'off' || attribute === 'no' || attribute === 'false' || attribute === '0') {
+          attribute = false;
+        }
+        return attribute;
+      };
+
+
+      /**
+       * Get element data attribute
+       * 
+       * @method getDataAttribute
+       * @param {string} attribute
+       * @param {object} element
+       * @return {(string|number)}
+       *
+       */
+
+      Counter.prototype.getDataAttribute = function(attribute, element) {
         if (element == null) {
           element = this.element;
         }
-        return element.getAttribute("data-" + attribute);
+        return this.parseDataAttribute(element.getAttribute("data-" + attribute));
       };
 
 
@@ -151,17 +171,11 @@
        * Get options from `data-*` attributes
        * 
        * @method getAttributes
-       * @param {object} element
+       * @return {object}
        *
        */
 
-      Counter.prototype.getAttributes = function(element) {
-        if (element == null) {
-          element = this.element;
-        }
-        if (element.dataset) {
-          return element.dataset;
-        }
+      Counter.prototype.getAttributes = function() {
         return {
           autostart: this.getDataAttribute('autostart'),
           easing: this.getDataAttribute('easing'),
