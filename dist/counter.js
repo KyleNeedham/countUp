@@ -3,7 +3,7 @@
 
   (function(root, factory) {
     if (typeof define === 'function' && define.amd) {
-      return define(['counter'], factory);
+      return define(factory);
     } else {
       return root.Counter = factory(root);
     }
