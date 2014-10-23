@@ -60,4 +60,4 @@ All available options can be passed using data attributes
 Then construct the same way you would normally
 ```
 counter = new Counter('#counter', 5000, 50000);
-``
+```
