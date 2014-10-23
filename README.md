@@ -60,6 +60,4 @@ All available options can be passed using data attributes
 Then construct the same way you would normally
 ```
 counter = new Counter('#counter', 5000, 50000);
-```
-
-**Be aware** that passing any values to `data-autostart | data-easing | data-grouping` will evaluate to `true` since they are parsed as strings.
+``
