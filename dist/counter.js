@@ -3,14 +3,16 @@
 
   (function(root, factory) {
     if (typeof define === 'function' && define.amd) {
-      return define(factory);
+      return define(function() {
+        return factory(root);
+      });
     } else {
       return root.Counter = factory(root);
     }
   })(this, function(root) {
     var Counter;
     return Counter = (function() {
-      Counter.VERSION = '0.1.1';
+      Counter.VERSION = '0.1.2';
 
       Counter.DEFAULTS = {
         autostart: false,

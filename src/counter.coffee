@@ -1,14 +1,15 @@
 
 ((root, factory) ->
   if typeof define is 'function' and define.amd
-    define factory
+    define ->
+      factory root
   else
     root.Counter = factory(root)
-) @, (root)->
+) @, (root) ->
 
   class Counter
 
-    @VERSION: '0.1.1'
+    @VERSION: '0.1.2'
 
     @DEFAULTS:
       autostart: no
